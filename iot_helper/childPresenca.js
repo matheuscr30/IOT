@@ -1,4 +1,4 @@
-/*var Gpio = require('onoff').Gpio,
+var Gpio = require('onoff').Gpio,
   led = new Gpio(27, 'out'),
   pir = new Gpio(17, 'in', 'both');
 
@@ -13,6 +13,6 @@ function exit() {
     pir.unexport();
     led.unexport();
     process.exit();
-}*/
+}
 
-console.log("Ola Mundo");
+//console.log("Ola Mundo");

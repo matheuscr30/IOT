@@ -34,6 +34,7 @@ function ligaPresenca(res){
 function desligaPresenca(res){
     if(child != null){
         child.kill();
+        child = null;
         res.json({"response" : "200"})
     } else {
         res.json({"response" : "400", "error" : "Sensor de Presença já está desligado"});
