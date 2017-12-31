@@ -1,14 +1,9 @@
-var child;
-var para = false;
-var spawn = require('child_process').spawn;
+var sleep = require('sleep');
+var stop = false;
 
 module.exports.estadoAtual = function (application, req, res) {
-    var Gpio = require('onoff').Gpio,
-      pir = new Gpio(17, 'in', 'both');
-
-    var value = pir.readSync();
-    pir.unexport();
-    res.json({"response" : "200", "estado" : value})
+    var value = app.locals.pir.readSync();
+    res.json({"response" : "200", "estado" : value});
 }
 
 module.exports.trocaEstado = function(application, req, res){
@@ -16,38 +11,37 @@ module.exports.trocaEstado = function(application, req, res){
     var option = dados.option;
 
     if(option == null){
-        res.json({"response" : "400", "error" : "Argumentos Inválidos"})
+        res.json({"response" : "400", "error" : "Argumentos Inválidos"});
         return;
     }
     console.log(option);
 
     if(option == "on"){
-        ligaPresenca(application, res);
+        ligaPresenca(application);
+        res.json({"response" : "200"});
     } else if (option == "off") {
-        desligaPresenca(res);
+        desligaPresenca();
+        res.json({"response" : "200"});
     } else {
         res.json({"error":"Comando Indisponível"});
     }
 }
 
-function ligaPresenca(application, res){
-    para = false;
+function ligaPresenca(application){
+    stop = false;
     ativa(application);
 }
 
-function desligaPresenca(res){
-    para = true;
+function desligaPresenca(){
+    stop = true;
 }
 
 function ativa(app){
-	var sleep = require('sleep');
-
-setInterval(function(){
-	if(para == true) return;
-	var value = app.locals.pir.readSync();
-			//console.log(value);
-
-			app.locals.lamp1.writeSync(value);
-			if(value == 1) sleep.sleep(3);
-		},1000);
+    setInterval(function(){
+        if(stop == true) return;
+        var value = app.locals.pir.readSync();
+        //console.log(value);
+        app.locals.lamps[0].writeSync(value);
+        if(value == 1) sleep.sleep(3);
+    },1000);
 }
