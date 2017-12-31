@@ -23,7 +23,7 @@ module.exports.trocaEstado = function(application, req, res){
         desligaPresenca();
         res.json({"response" : "200"});
     } else {
-        res.json({"error":"Invalid Command"});
+        res.json({"response" : "400", "error":"Invalid Command"});
     }
 }
 
