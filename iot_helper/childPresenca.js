@@ -1,13 +1,11 @@
 var sleep = require('sleep');
-var Gpio = require('onoff').Gpio,
-  lamp = new Gpio(27, 'out'),
-  pir = new Gpio(17, 'in', 'both');
+var app = require('../app');
 
 setInterval(function(){
-	var value = pir.readSync();
+	var value = app.locals.pir.readSync();
 			//console.log(value);
 
-			lamp.writeSync(value);
+			app.locals.lamp.writeSync(value);
 			if(value == 1) sleep.sleep(3);
 		},1000);
 

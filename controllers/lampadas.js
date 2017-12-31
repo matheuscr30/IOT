@@ -1,5 +1,5 @@
 module.exports.estadoAtual = function (application, req, res) {
-    console.log(req.params.id);
+    console.log(req.params.num);
     var Gpio = require('onoff').Gpio,
       lamp = new Gpio(27, 'in', 'both');
 

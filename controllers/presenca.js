@@ -1,4 +1,5 @@
 var child;
+var para = false;
 var spawn = require('child_process').spawn;
 
 module.exports.estadoAtual = function (application, req, res) {
@@ -21,7 +22,7 @@ module.exports.trocaEstado = function(application, req, res){
     console.log(option);
 
     if(option == "on"){
-        ligaPresenca(res);
+        ligaPresenca(application, res);
     } else if (option == "off") {
         desligaPresenca(res);
     } else {
@@ -29,30 +30,24 @@ module.exports.trocaEstado = function(application, req, res){
     }
 }
 
-function ligaPresenca(res){
-    child = spawn('node', ['iot_helper/childPresenca.js']);
-
-    child.on('exit', function(){
-      console.log('Filho excluido');
-    });
-
-    child.stdout.on('data', function (data) {
-      console.log('stdout: ' + data);
-    });
-
-    child.stderr.on('data', function (data) {
-      console.log('stderr: ' + data);
-    });
-
-    res.json({"response" : "200"});
+function ligaPresenca(application, res){
+    para = false;
+    ativa(application);
 }
 
 function desligaPresenca(res){
-    if(child != null){
-        child.kill();
-        child = null;
-        res.json({"response" : "200"});
-    } else {
-        res.json({"response" : "400", "error" : "Sensor de Presença já está desligado"});
-    }
+    para = true;
+}
+
+function ativa(app){
+	var sleep = require('sleep');
+
+setInterval(function(){
+	if(para == true) return;
+	var value = app.locals.pir.readSync();
+			//console.log(value);
+
+			app.locals.lamp1.writeSync(value);
+			if(value == 1) sleep.sleep(3);
+		},1000);
 }
