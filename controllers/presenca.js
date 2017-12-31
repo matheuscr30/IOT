@@ -1,8 +1,24 @@
 var child;
 var spawn = require('child_process').spawn;
 
-module.exports.home = function(application, req, res){
-    var option = req.params.option;
+module.exports.estadoAtual = function (application, req, res) {
+    var Gpio = require('onoff').Gpio,
+      pir = new Gpio(17, 'in', 'both');
+
+    var value = pir.readSync();
+    pir.unexport();
+    res.json({"response" : "200", "estado" : value})
+}
+
+module.exports.trocaEstado = function(application, req, res){
+    var dados = req.body;
+    var option = dados.option;
+
+    if(option == null){
+        res.json({"response" : "400", "error" : "Argumentos Inválidos"})
+        return;
+    }
+    console.log(option);
 
     if(option == "on"){
         ligaPresenca(res);
@@ -28,14 +44,14 @@ function ligaPresenca(res){
       console.log('stderr: ' + data);
     });
 
-    res.json({"response" : "200"})
+    res.json({"response" : "200"});
 }
 
 function desligaPresenca(res){
     if(child != null){
         child.kill();
         child = null;
-        res.json({"response" : "200"})
+        res.json({"response" : "200"});
     } else {
         res.json({"response" : "400", "error" : "Sensor de Presença já está desligado"});
     }
