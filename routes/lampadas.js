@@ -4,6 +4,6 @@ module.exports = function (application) {
     });
 
     application.post("/api/lampadas/:num", function (req, res) {
-        console.log(req.params.num);
+        application.controllers.lampadas.trocaEstado(application, req, res);
     });
 }

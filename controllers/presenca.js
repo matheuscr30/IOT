@@ -3,7 +3,7 @@ var stop = false;
 
 module.exports.estadoAtual = function (application, req, res) {
     var value = app.locals.pir.readSync();
-    res.json({"response" : "200", "estado" : value});
+    res.json({"response" : "200", "state" : value});
 }
 
 module.exports.trocaEstado = function(application, req, res){
@@ -11,7 +11,7 @@ module.exports.trocaEstado = function(application, req, res){
     var option = dados.option;
 
     if(option == null){
-        res.json({"response" : "400", "error" : "Argumentos Inválidos"});
+        res.json({"response" : "400", "error" : "Invalid Arguments"});
         return;
     }
     console.log(option);
@@ -23,7 +23,7 @@ module.exports.trocaEstado = function(application, req, res){
         desligaPresenca();
         res.json({"response" : "200"});
     } else {
-        res.json({"error":"Comando Indisponível"});
+        res.json({"error":"Invalid Command"});
     }
 }
 
