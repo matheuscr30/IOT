@@ -10,6 +10,61 @@
     <script src="scripts/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script defer src="scripts/material.min.js"></script>
 
+    <script type="text/javascript">
+    //CHAMAR AS API'S
+    function configDialogSensores() {
+        if (! dialogSensores.showModal) {
+            dialogPolyfill.registerDialog(dialogSensores);
+        }
+        btnAbrirSensores.addEventListener('click', function() {
+            $.ajax({
+                url: '192.168.0.101:3000/api/presenca',
+                method: 'get',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+            dialogSensores.showModal();
+        });
+        dialogSensores.querySelector('.btnSairDialog').addEventListener('click', function() {
+            dialogSensores.close();
+        });
+    }
+
+    function configDialogLuzes(){
+        if (! dialogLuzes.showModal) {
+            dialogPolyfill.registerDialog(dialogLuzes);
+        }
+        btnAbrirLuzes.addEventListener('click', function() {
+            dialogLuzes.showModal();
+        });
+        dialogLuzes.querySelector('.btnSairDialog').addEventListener('click', function() {
+            dialogLuzes.close();
+        });
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'http://192.168.0.101:3000/api/presenca',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function (xhr, status, erro) {
+                alert(erro);
+            }
+        });
+
+        var dialogLuzes = document.querySelector('#dialogLuzes');
+        var dialogSensores = document.querySelector('#dialogSensores');
+        var btnAbrirLuzes = document.querySelector('#btnAbrirLuzes');
+        var btnAbrirSensores = document.querySelector("#btnAbrirSensores");
+
+        configDialogSensores();
+        configDialogLuzes();
+    });
+    </script>
 </head>
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -90,41 +145,5 @@
             <button type="button" class="mdl-button btnSairDialog">Sair</button>
         </div>
     </dialog>
-
-    <script>
-    var dialogLuzes = document.querySelector('#dialogLuzes');
-    var dialogSensores = document.querySelector('#dialogSensores');
-    var btnAbrirLuzes = document.querySelector('#btnAbrirLuzes');
-    var btnAbrirSensores = document.querySelector("#btnAbrirSensores");
-
-    //CHAMAR AS API'S
-    function configDialogSensores() {
-        if (! dialogSensores.showModal) {
-            dialogPolyfill.registerDialog(dialogSensores);
-        }
-        btnAbrirSensores.addEventListener('click', function() {
-
-            dialogSensores.showModal();
-        });
-        dialogSensores.querySelector('.btnSairDialog').addEventListener('click', function() {
-            dialogSensores.close();
-        });
-    }
-
-    function configDialogLuzes(){
-        if (! dialogLuzes.showModal) {
-            dialogPolyfill.registerDialog(dialogLuzes);
-        }
-        btnAbrirLuzes.addEventListener('click', function() {
-            dialogLuzes.showModal();
-        });
-        dialogLuzes.querySelector('.btnSairDialog').addEventListener('click', function() {
-            dialogLuzes.close();
-        });
-    }
-
-    configDialogLuzes();
-    configDialogSensores();
-    </script>
 </body>
 </html>
