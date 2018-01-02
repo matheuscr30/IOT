@@ -18,15 +18,44 @@
         }
         btnAbrirSensores.addEventListener('click', function() {
             $.ajax({
-                url: '192.168.0.101:3000/api/presenca',
-                method: 'get',
+                type: 'GET',
                 async: false,
-                success: function (data) {
-                    console.log(data);
+                url: 'http://192.168.0.101:3000/api/presenca',
+                success: function(data) {
+                    console.log(data.state);
+                    if(data.state == 0) $('#labelSensorPresenca').removeClass("is-checked");
+                    else $('#labelSensorPresenca').addClass("is-checked");
+                },
+                error: function (xhr, status, erro) {
+                    alert(erro);
                 }
             });
             dialogSensores.showModal();
         });
+
+        $("#switchSensorPresenca").click(function () {
+            var option;
+
+            if($("#labelSensorPresenca").is(".is-checked")) option = "off";
+            else option = "on";
+
+            $.ajax({
+                url: 'http://192.168.0.101:3000/api/presenca',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                contentType: 'application/json',
+                data: JSON.stringify( { "option" : option} ),
+                processData: false,
+                success: function( data, textStatus, jQxhr ){
+                    console.log(data);
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+                }
+            });
+        });
+
         dialogSensores.querySelector('.btnSairDialog').addEventListener('click', function() {
             dialogSensores.close();
         });
@@ -37,7 +66,42 @@
             dialogPolyfill.registerDialog(dialogLuzes);
         }
         btnAbrirLuzes.addEventListener('click', function() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: 'http://192.168.0.101:3000/api/lampadas/0',
+                success: function(data) {
+                    console.log(data.state);
+                    if(data.state == 0) $('#labelLuz1').removeClass("is-checked");
+                    else $('#labelLuz1').addClass("is-checked");
+                },
+                error: function (xhr, status, erro) {
+                    alert(erro);
+                }
+            });
             dialogLuzes.showModal();
+        });
+        $("#switchLuz1").click(function () {
+            var option;
+
+            if($("#labelLuz1").is(".is-checked")) option = "off";
+            else option = "on";
+
+            $.ajax({
+                url: 'http://192.168.0.101:3000/api/lampadas/0',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                contentType: 'application/json',
+                data: JSON.stringify( { "option" : option} ),
+                processData: false,
+                success: function( data, textStatus, jQxhr ){
+                    console.log(data);
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+                }
+            });
         });
         dialogLuzes.querySelector('.btnSairDialog').addEventListener('click', function() {
             dialogLuzes.close();
@@ -45,16 +109,6 @@
     }
 
     $(document).ready(function () {
-        $.ajax({
-            type: 'GET',
-            url: 'http://192.168.0.101:3000/api/presenca',
-            success: function(data) {
-                console.log(data);
-            },
-            error: function (xhr, status, erro) {
-                alert(erro);
-            }
-        });
 
         var dialogLuzes = document.querySelector('#dialogLuzes');
         var dialogSensores = document.querySelector('#dialogSensores');
@@ -119,7 +173,7 @@
             <h4>Sensores</h4>
         </div>
         <div class="mdl-dialog__content without_color">
-            <label for="switchSensorPresenca" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+            <label for="switchSensorPresenca" id="labelSensorPresenca" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
                 <input type="checkbox" id="switchSensorPresenca" class="mdl-switch__input">
                 <span class="mdl-switch__label">Sensor de Presença off/on</span>
             </label>
@@ -135,7 +189,7 @@
             <h4>Luzes</h4>
         </div>
         <div class="mdl-dialog__content without_color">
-            <label for="switchLuz1" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+            <label for="switchLuz1" id="labelLuz1" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
                 <input type="checkbox" id="switchLuz1" class="mdl-switch__input">
                 <span class="mdl-switch__label">Luz 1 off/on</span>
             </label>
