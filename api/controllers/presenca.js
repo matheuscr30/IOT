@@ -1,8 +1,8 @@
 var sleep = require('sleep');
-var stop = false;
+var stop = true;
 
 module.exports.estadoAtual = function (application, req, res) {
-    var value = app.locals.pir.readSync();
+    var value = stop ? 0 : 1;
     res.json({"response" : "200", "state" : value});
 }
 
