@@ -1,0 +1,16 @@
+{
+  "name": "iot-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "consign": "^0.1.6",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "^4.15.5",
+    "express-session": "^1.15.6"
+  }
+}
